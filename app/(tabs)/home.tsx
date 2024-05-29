@@ -1,39 +1,60 @@
-import { FlatList, Text } from "react-native";
+import { useEffect, useState } from "react";
+import { FlatList, SafeAreaView, StyleSheet } from "react-native";
 
-const PokemonItem = ({ name }: { name: string }) => <Text>{name}</Text>;
+import PokemonItem from "@/components/PokemonItem";
+import EmptyListComponent from "@/components/EmptyListComponent";
 
-const pokemons = [
-  { name: "bulbasaur", url: "https://pokeapi.co/api/v2/pokemon/1/" },
-  { name: "ivysaur", url: "https://pokeapi.co/api/v2/pokemon/2/" },
-  { name: "venusaur", url: "https://pokeapi.co/api/v2/pokemon/3/" },
-  { name: "charmander", url: "https://pokeapi.co/api/v2/pokemon/4/" },
-  { name: "charmeleon", url: "https://pokeapi.co/api/v2/pokemon/5/" },
-  { name: "charizard", url: "https://pokeapi.co/api/v2/pokemon/6/" },
-  { name: "squirtle", url: "https://pokeapi.co/api/v2/pokemon/7/" },
-  { name: "wartortle", url: "https://pokeapi.co/api/v2/pokemon/8/" },
-  { name: "blastoise", url: "https://pokeapi.co/api/v2/pokemon/9/" },
-  { name: "caterpie", url: "https://pokeapi.co/api/v2/pokemon/10/" },
-  { name: "metapod", url: "https://pokeapi.co/api/v2/pokemon/11/" },
-  { name: "butterfree", url: "https://pokeapi.co/api/v2/pokemon/12/" },
-  { name: "weedle", url: "https://pokeapi.co/api/v2/pokemon/13/" },
-  { name: "kakuna", url: "https://pokeapi.co/api/v2/pokemon/14/" },
-  { name: "beedrill", url: "https://pokeapi.co/api/v2/pokemon/15/" },
-  { name: "pidgey", url: "https://pokeapi.co/api/v2/pokemon/16/" },
-  { name: "pidgeotto", url: "https://pokeapi.co/api/v2/pokemon/17/" },
-  { name: "pidgeot", url: "https://pokeapi.co/api/v2/pokemon/18/" },
-  { name: "rattata", url: "https://pokeapi.co/api/v2/pokemon/19/" },
-  { name: "raticate", url: "https://pokeapi.co/api/v2/pokemon/20/" },
-];
+import { getPokemons } from "@/service/api";
+
+import { PokemonInterface } from "@/types/api";
 
 const Home = () => {
+  const [loading, setLoading] = useState(true);
+  const [offset, setOffset] = useState(0);
+  const [pokemons, setPokemons] = useState<PokemonInterface[]>([]);
+
+  useEffect(() => {
+    getPokemons(offset).then((data) => {
+      setPokemons([...pokemons, ...data]);
+      setLoading(false);
+    });
+  }, [offset]);
+
+  const endReched = () => {
+    if (!loading) {
+      setOffset((prevState) => prevState + 20);
+    }
+  }
+
   return (
-    <FlatList
-      data={pokemons}
-      renderItem={({ item }) => <PokemonItem {...item} />}
-      onEndReached={() => console.log("???")}
-      onEndReachedThreshold={0.8}
-    />
+    <SafeAreaView style={styles.container}>
+      <FlatList
+        contentContainerStyle={styles.listContainer}
+        style={styles.list}
+        data={pokemons}
+        renderItem={({ item }) => <PokemonItem key={item.id} {...item} />}
+        onEndReached={endReched}
+        onEndReachedThreshold={0.8}
+        ListEmptyComponent={<EmptyListComponent text={loading ? 'Loading...' : 'No pokemons found'} />}
+      />
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  listContainer: {
+    padding: 12,
+    gap: 12,
+  },
+  list: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    padding: 12,
+  },
+});
 
 export default Home;
