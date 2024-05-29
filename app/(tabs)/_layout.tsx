@@ -1,5 +1,6 @@
-import { AntDesign, Entypo, FontAwesome } from '@expo/vector-icons';
+import { StyleSheet } from 'react-native';
 import { Tabs } from 'expo-router';
+import { AntDesign, Entypo, FontAwesome } from '@expo/vector-icons';
 
 type TabBarIconProps = {
   focused: boolean;
@@ -22,10 +23,16 @@ const renderIcon = (name: string) => ({ focused }: TabBarIconProps) => {
 
 export default function TabLayout() {
   return (
-    <Tabs screenOptions={{ headerShown: false, tabBarShowLabel: false }}>
+    <Tabs screenOptions={{ headerShown: false, tabBarShowLabel: false, tabBarStyle: styles.tabBar, tabBarHideOnKeyboard: true }}>
       <Tabs.Screen name="home" options={{ tabBarIcon: renderIcon('home') }} />
       <Tabs.Screen name="search" options={{ tabBarIcon: renderIcon('search') }} />
       <Tabs.Screen name="like" options={{ tabBarIcon: renderIcon('like') }} />
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  tabBar: {
+    height: 60,
+  }
+})
