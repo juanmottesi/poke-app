@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { AntDesign, FontAwesome5, FontAwesome6, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
 import { PokemonTypeEnum, StatInterface } from "@/types/api"
+import { Platform } from "react-native";
 
 export const formatId = (id: number) => `0000${id}`.slice(-5)
 
@@ -34,3 +35,5 @@ export const createStat = (name: string, value: string | number): StatInterface 
     name
   }
 })
+
+export const onIos = (ios: any, android: any) => Platform.OS === 'ios' ? ios : android;

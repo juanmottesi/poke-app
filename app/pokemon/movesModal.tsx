@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { Dimensions, StyleSheet, Text, View, Platform, FlatList } from "react-native"
+import { Dimensions, StyleSheet, Text, View, FlatList } from "react-native"
 import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
 import GestureLine from "@/components/GestureLine";
 import MoveItem from "@/components/MoveItem";
+
+import { onIos } from "@/utils/format";
 
 const { height } = Dimensions.get('screen');
 
@@ -93,7 +95,7 @@ const styles = StyleSheet.create({
   abilitiesContainer: {
     paddingHorizontal: 12,
     marginTop: 8,
-    marginBottom: Platform.OS === 'ios' ? 24 : 0,
+    marginBottom: onIos(24, 0),
   }
 })
 
