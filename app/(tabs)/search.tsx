@@ -49,6 +49,7 @@ const Search = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: 48,
   },
   input: {
     margin: 12,

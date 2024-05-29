@@ -1,8 +1,9 @@
 import { Stack } from 'expo-router';
+import { View } from 'react-native';
 
 const Layout = () => (
-  <Stack>
-    <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+  <Stack screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="(tabs)" />
     <Stack.Screen name="pokemon" />
   </Stack>
 );

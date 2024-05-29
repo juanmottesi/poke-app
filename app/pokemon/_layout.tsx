@@ -1,9 +1,9 @@
 import { Stack } from 'expo-router';
 
 const Layout = () => (
-  <Stack screenOptions={{ headerShown: false }}>
+  <Stack screenOptions={{ headerShown: true }}>
     <Stack.Screen name="[name]" />
-    <Stack.Screen name="movesModal" options={{ presentation: 'transparentModal' }} />
+    <Stack.Screen name="movesModal" options={{ presentation: 'transparentModal', headerShown: false }} />
   </Stack>
 );
 

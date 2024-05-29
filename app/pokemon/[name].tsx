@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
+
 import { AntDesign } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -9,27 +10,39 @@ import { chunk } from 'lodash';
 import PokemonImage from "@/components/PokemonImage";
 import PokemonType from "@/components/PokemonType";
 import Stat from "@/components/Stat";
+import Button from "@/components/Button";
+import Head from "@/components/Head";
 
 import { getPokemon } from "@/service/api";
 
 import { createStat, formatId, getStatIcon } from "@/utils/format";
+import { LIKED_POKEMON } from "@/utils/constants";
 
 import { PokemonInterface, StatInterface } from "@/types/api";
+import colorPokemonType from "@/types/colorsPokemonType";
 
 const Pokemon = () => {
   const { name } = useLocalSearchParams();
   const router = useRouter();
+  const navigation = useNavigation()
   const [pokemon, setPokemon] = useState<PokemonInterface | null>(null);
   const [likedPokemon, setLikedPokemon] = useState('');
 
   useEffect(() => {
     if (name) {
-      AsyncStorage.getItem('likedPokemons')
+      AsyncStorage.getItem(LIKED_POKEMON)
         .then((data) => setLikedPokemon(data || ''))
         .then(() => getPokemon(name.toString()))
         .then((data) => setPokemon(data));
     }
   }, [name]);
+
+  useEffect(() => {
+    const pokeColor = pokemon ? colorPokemonType[pokemon.types[0]] : 'white';
+    navigation.setOptions({
+      header: () => <Head color={pokeColor} />,
+    })
+  }, [navigation, pokemon])
 
   if (!pokemon) {
     return (
@@ -50,7 +63,7 @@ const Pokemon = () => {
 
   const likePokemon = () => {
     setLikedPokemon(pokemon.name);
-    AsyncStorage.setItem('likedPokemons', pokemon.name);
+    AsyncStorage.setItem(LIKED_POKEMON, pokemon.name);
   }
 
   return (
@@ -86,9 +99,7 @@ const Pokemon = () => {
         ))
       }
       <View style={styles.line} />
-      <TouchableOpacity style={styles.abilitiesButton} onPress={goToDetails}>
-        <Text>Abilities</Text>
-      </TouchableOpacity>
+      <Button style={styles.abilitiesButton} onPress={goToDetails} text="Abilities" />
     </View>
   )
 }
@@ -150,16 +161,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   abilitiesButton: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 16,
-    margin: 12,
-    backgroundColor: '#fafafa',
-    borderRadius: 8,
     width: '80%',
-    alignSelf: 'center'
   }
 })
 

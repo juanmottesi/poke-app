@@ -22,10 +22,10 @@ const renderIcon = (name: string) => ({ focused }: TabBarIconProps) => {
 
 export default function TabLayout() {
   return (
-    <Tabs screenOptions={{ headerShown: false }}>
-      <Tabs.Screen name="home" options={{ tabBarIcon: renderIcon('home'), tabBarShowLabel: false }} />
-      <Tabs.Screen name="search" options={{ tabBarIcon: renderIcon('search'), tabBarShowLabel: false }} />
-      <Tabs.Screen name="like" options={{ tabBarIcon: renderIcon('like'), tabBarShowLabel: false }} />
+    <Tabs screenOptions={{ headerShown: false, tabBarShowLabel: false }}>
+      <Tabs.Screen name="home" options={{ tabBarIcon: renderIcon('home') }} />
+      <Tabs.Screen name="search" options={{ tabBarIcon: renderIcon('search') }} />
+      <Tabs.Screen name="like" options={{ tabBarIcon: renderIcon('like') }} />
     </Tabs>
   );
 }

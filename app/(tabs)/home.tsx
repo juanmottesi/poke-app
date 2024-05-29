@@ -44,6 +44,7 @@ const Home = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: 48,
   },
   listContainer: {
     padding: 12,
