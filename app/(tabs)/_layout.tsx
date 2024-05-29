@@ -2,6 +2,8 @@ import { StyleSheet } from 'react-native';
 import { Tabs } from 'expo-router';
 import { AntDesign, Entypo, FontAwesome } from '@expo/vector-icons';
 
+import { onIos } from '@/utils/format';
+
 type TabBarIconProps = {
   focused: boolean;
   color: string;
@@ -33,6 +35,7 @@ export default function TabLayout() {
 
 const styles = StyleSheet.create({
   tabBar: {
-    height: 60,
+    height: onIos(70, 60),
+    paddingTop: onIos(10, 0),
   }
 })

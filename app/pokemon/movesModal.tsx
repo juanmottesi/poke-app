@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Platform, FlatList } from "react-native"
+import { StyleSheet, Text, View, FlatList } from "react-native"
 import Animated from "react-native-reanimated";
 import { GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
 import { useLocalSearchParams } from "expo-router";
@@ -7,6 +7,8 @@ import GestureLine from "@/components/GestureLine";
 import MoveItem from "@/components/MoveItem";
 
 import usePanGestureCloseOnDown from "@/hooks/usePanGestureCloseOnDown";
+
+import { onIos } from "@/utils/format";
 
 const MovesModal = () => {
   const { animatedStyles, pan } = usePanGestureCloseOnDown();
@@ -55,7 +57,7 @@ const styles = StyleSheet.create({
   abilitiesContainer: {
     paddingHorizontal: 12,
     marginTop: 8,
-    marginBottom: Platform.OS === 'ios' ? 24 : 0,
+    marginBottom: onIos(24, 0),
   }
 })
 
