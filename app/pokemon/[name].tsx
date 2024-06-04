@@ -1,11 +1,8 @@
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
-
-import { AntDesign } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import { chunk } from 'lodash';
+import { AntDesign } from "@expo/vector-icons";
 
 import PokemonImage from "@/components/PokemonImage";
 import PokemonType from "@/components/PokemonType";
@@ -13,10 +10,11 @@ import Stat from "@/components/Stat";
 import Button from "@/components/Button";
 import Head from "@/components/Head";
 
+import { usePokemonLiked } from "@/context/PokemonLiked";
+
 import { getPokemon } from "@/service/api";
 
 import { createStat, formatId, getStatIcon } from "@/utils/format";
-import { LIKED_POKEMON } from "@/utils/constants";
 
 import { PokemonInterface, StatInterface } from "@/types/api";
 import colorPokemonType from "@/types/colorsPokemonType";
@@ -26,13 +24,11 @@ const Pokemon = () => {
   const router = useRouter();
   const navigation = useNavigation()
   const [pokemon, setPokemon] = useState<PokemonInterface | null>(null);
-  const [likedPokemon, setLikedPokemon] = useState('');
+  const { likedPokemon, likePokemon } = usePokemonLiked();
 
   useEffect(() => {
     if (name) {
-      AsyncStorage.getItem(LIKED_POKEMON)
-        .then((data) => setLikedPokemon(data || ''))
-        .then(() => getPokemon(name.toString()))
+      getPokemon(name.toString())
         .then((data) => setPokemon(data));
     }
   }, [name]);
@@ -61,11 +57,6 @@ const Pokemon = () => {
     });
   }
 
-  const likePokemon = () => {
-    setLikedPokemon(pokemon.name);
-    AsyncStorage.setItem(LIKED_POKEMON, pokemon.name);
-  }
-
   return (
     <View style={styles.contianer}>
       <PokemonImage source={pokemon.sprites.front_default} type={pokemon.types[0]} />
@@ -74,8 +65,8 @@ const Pokemon = () => {
           <Text style={styles.name}>{pokemon.name}</Text>
           <Text style={styles.id}>#{formatId(pokemon.id)}</Text>
         </View>
-        <TouchableOpacity style={styles.roundButton} onPress={likePokemon}>
-          <AntDesign name="heart" size={24} color={likedPokemon === pokemon.name ? 'red' : '#ccc'} />
+        <TouchableOpacity style={styles.roundButton} onPress={() => likePokemon(pokemon)}>
+          <AntDesign name="heart" size={24} color={likedPokemon?.name === pokemon.name ? 'red' : '#ccc'} />
         </TouchableOpacity>
       </View>
       <View style={styles.typesContainer}>

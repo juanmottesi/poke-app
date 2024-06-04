@@ -1,7 +1,11 @@
 import { Stack } from 'expo-router';
 
+import PokemonLikedProvider from '@/context/PokemonLiked';
+
 const Layout = () => (
-  <Stack screenOptions={{ headerShown: false }} />
+  <PokemonLikedProvider>
+    <Stack screenOptions={{ headerShown: false }} />
+  </PokemonLikedProvider>
 );
 
 export default Layout;

@@ -1,49 +1,18 @@
-import { useEffect, useState } from "react";
 import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { Circle, Svg } from "react-native-svg";
 import { useRouter } from "expo-router";
-import { useIsFocused } from "@react-navigation/native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Button from "@/components/Button";
 
-import { getPokemon } from "@/service/api";
-
-import { LIKED_POKEMON } from "@/utils/constants";
-
-import { PokemonInterface } from "@/types/api";
 import colorPokemonType from "@/types/colorsPokemonType";
+import { usePokemonLiked } from "@/context/PokemonLiked";
 
 const Like = () => {
   const router = useRouter();
-  const isFocused = useIsFocused();
 
-  const [loading, setLoading] = useState(true);
-  const [pokemon, setPokemon] = useState<PokemonInterface | null>(null);
+  const { likedPokemon } = usePokemonLiked();
 
-  useEffect(() => {
-    setLoading(true);
-    AsyncStorage.getItem(LIKED_POKEMON)
-      .then((pokemonName) => {
-        if (pokemonName) return getPokemon(pokemonName);
-        return Promise.reject('No liked pokemons found.');
-      })
-      .then((data: PokemonInterface) => setPokemon(data))
-      .catch(() => null)
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [isFocused]);
-
-  if (loading) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <Text>Loading...</Text>
-      </SafeAreaView>
-    );
-  }
-
-  if (!pokemon) {
+  if (!likedPokemon) {
     return (
       <SafeAreaView style={styles.container}>
         <Text>No liked pokemons found.</Text>
@@ -55,9 +24,9 @@ const Like = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.view}>
         <Svg style={styles.background}>
-          <Circle cx="150" cy="150" r="150" fill={colorPokemonType[pokemon.types[0]]} />
+          <Circle cx="150" cy="150" r="150" fill={colorPokemonType[likedPokemon.types[0]]} />
         </Svg>
-        <Image source={{ uri: pokemon.sprites.other.showdown.front_default }} style={styles.image} />
+        <Image source={{ uri: likedPokemon.sprites.other.showdown.front_default }} style={styles.image} />
       </View>
       <Button onPress={() => router.push(`/like/delete`)} text="Remove like" />
     </SafeAreaView>

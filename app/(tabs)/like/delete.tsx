@@ -1,16 +1,16 @@
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Button from "@/components/Button";
 
-import { LIKED_POKEMON } from "@/utils/constants";
+import { usePokemonLiked } from "@/context/PokemonLiked";
 
 const Like = () => {
   const router = useRouter();
+  const { removeLikedPokemon } = usePokemonLiked();
 
   const deletePokemon = () => {
-    AsyncStorage.removeItem(LIKED_POKEMON)
+    removeLikedPokemon()
       .then(() => router.replace('/'))
   }
 
